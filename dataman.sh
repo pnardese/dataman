@@ -5,15 +5,18 @@
 # 2016 Enzo Nardese
 #
 # Two configurations: disk name at line 12, and media file suffix at line 65 ans 67 to normalize reports
-#
-# define card name as directory name
+# card and file names must not have spaces
 
 # configure disk to copy media to
 DISK="/Volumes/Nick/prova"
 
 # create directory for each day of shooting, with no argument or -t argument date is today, with -y date is yesterday
 DATE=`date +%Y-%m-%d`
+
+# define card name as directory name
 NOMESORG=`echo "$1"| grep -o '[a-zA-Z0-9_]*$'`
+
+# $SWITCH = 1 no arguments passed, $SWITCH = 2 argument, either -y or -t
 SWITCH=1
 while getopts ":yt" opt; do
   case $opt in
