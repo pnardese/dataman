@@ -5,7 +5,7 @@
 # 2016 Enzo Nardese
 #
 # Two configurations: disk name at line 12, and media file suffix at line 65 ans 67 to normalize reports
-# card and file names must not have spaces
+# 
 
 # configure disk to copy media to
 DISK="/Volumes/Nick/prova"
@@ -51,14 +51,16 @@ fi
 
 # copy using rsync, use --append to continue interrupted transfers, requires rsync 3.1.1
 
-if [ $SWITCH -eq 1 ]; then
-  rsync -av --progress --append --log-file=$DIRECTORYDEST/$NOMESORG/logs.txt --log-file-format="%f %b %l %C" $1 $DIRECTORYDEST
-elif [ $SWITCH -eq 2 ]; then
-  rsync -av --progress --append --log-file=$DIRECTORYDEST/$NOMESORG/logs.txt --log-file-format="%f %b %l %C" $2 $DIRECTORYDEST
-else
-  echo "error"
-  exit 1
-fi
+rsync -av --progress --append --log-file=$DIRECTORYDEST/$NOMESORG/logs.txt --log-file-format="%f %b %l %C" ${!SWITCH} $DIRECTORYDEST
+
+#if [ $SWITCH -eq 1 ]; then
+#  rsync -av --progress --append --log-file=$DIRECTORYDEST/$NOMESORG/logs.txt --log-file-format="%f %b %l %C" $1 $DIRECTORYDEST
+#elif [ $SWITCH -eq 2 ]; then
+#  rsync -av --progress --append --log-file=$DIRECTORYDEST/$NOMESORG/logs.txt --log-file-format="%f %b %l %C" $2 $DIRECTORYDEST
+#else
+#  echo "error"
+#  exit 1
+#fi
 
 chmod 777 $DIRECTORYDEST/$NOMESORG/
 
