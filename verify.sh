@@ -38,7 +38,7 @@ then
     echo "checked seal...OK!"    
 fi
 
-# remove verify.txt and verify_disk.txt
+remove verify.txt and verify_disk.txt
 
-# rm $1/verify.txt $1/verify_disk.txt
+rm $1/verify.txt $1/verify_disk.txt
 
