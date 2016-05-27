@@ -3,6 +3,8 @@
 # verify.sh
 #
 # 2016 Enzo Nardese
+# Use: ./verify.sh volume_to_check
+# name of directory must contain only alphanumeric characters and not contain spaces, file's names alphanumeric, ".", "_", "-", "'"
 #
 # CONFIGURATION: media type
 MEDIA="flac|mp3"
@@ -25,7 +27,9 @@ cat $1/disk_seal.txt | awk '{print $3}' > /tmp/file_checksums2.txt
 paste -d ' ' /tmp/file_list2.txt /tmp/file_size2.txt /tmp/file_checksums2.txt > $1/verify_disk.txt
 
 # check differencies between verify.txt and verify_disk.txt, exit code = 0 no differencies -> check ok!
-diff $1/verify_disk.txt $1/verify.txt
+sort $1/verify.txt > /tmp/verify_sorted.txt
+sort $1/verify_disk.txt > /tmp/verify_disk_sorted.txt
+diff /tmp/verify_disk_sorted.txt /tmp/verify_sorted.txt
 rv=$?  
 if [[ $rv == 1 ]]  
 then    
@@ -36,5 +40,5 @@ fi
 
 # remove verify.txt and verify_disk.txt
 
-rm $1/verify.txt $1/verify_disk.txt
+# rm $1/verify.txt $1/verify_disk.txt
 

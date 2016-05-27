@@ -3,6 +3,12 @@
 # dataman.sh
 #
 # 2016 Enzo Nardese
+# Use: ./dataman.sh volu_to_copy
+# copy media to $DISK, the script produces two files: report.txt and disk_seal.txt, this last one is used to provide a seal to the disk
+# contains file name, size and MD5 checksum. The disk is checked with verify.sh, verifies number of files, names, sizes and MD5 checksums
+# name of directory must contain only alphanumeric characters and not contain spaces, file's names alphanumeric, ".", "_", "-", "'"
+#
+#
 #
 # CONFIGURATION:
 # configure disk to copy media to and media type, use | for different media types
@@ -61,7 +67,6 @@ cat $DIRECTORYDEST/$NOMESORG/logs.txt | grep -E "$MEDIA" | awk '{print $1" "$2" 
 
 # write disk seal on disk, contains file name with complete path, size and MD5 checksum
 cat $DIRECTORYDEST/$NOMESORG/logs.txt | grep -E "$MEDIA" | awk '{print "/"$4" "$6" "$7}' >> $DISK/disk_seal.txt
-
 
 # send iphone imessage...
 # osascript -e 'tell application "Messages" to send "copia1 finita!" to buddy "miotel"'
