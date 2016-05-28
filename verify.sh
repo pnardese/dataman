@@ -3,17 +3,42 @@
 # verify.sh
 #
 # 2016 Enzo Nardese
+#
 # Use: ./verify.sh volume_to_check
+# checks existing disk_seal.txt, written by either dataman.sh or verify.sh -g
+#
+# option: verify.sh -g volume_to_seal 
+# generates disk_seal.txt in volume_to_seal
+#
 # name of directory must contain only alphanumeric characters and not contain spaces, file's names alphanumeric, ".", "_", "-", "'"
 #
 # CONFIGURATION: media type
 MEDIA="flac|mp3"
 
 # ===============================================================================
+
+REMOVE=0
+while getopts ":g" opt; do
+  case $opt in
+    g)
+      find $2 -print0 | xargs -0 stat -f "%N" | grep -E "$MEDIA" | grep -o "[a-zA-Z0-9._'-]*$" > /tmp/file_list1.txt
+      find $2 -print0 | xargs -0 stat -f "%N %z" | grep -E "$MEDIA" | grep -o '[a-zA-Z0-9._]*$' > /tmp/file_size1.txt
+      find $2 -type f -exec md5 {} + | grep -E "$MEDIA" | grep -o '[a-z0-9]*$' > /tmp/disk_check_sums1.txt
+
+      paste -d ' ' /tmp/file_list1.txt /tmp/file_size1.txt /tmp/disk_check_sums1.txt > $2/disk_seal.txt
+      exit 1
+      ;;
+	\?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+  esac
+done
+
 # build list of files on disk $1 and generate verify.txt file in directory $1
 
 find $1 -print0 | xargs -0 stat -f "%N" | grep -E "$MEDIA" | grep -o "[a-zA-Z0-9._'-]*$" > /tmp/file_list1.txt
-find $1 -print0 | xargs -0 stat -f "%N %z" | grep -E "$MEDIA" | grep -o '[a-zA-Z0-9._]*$' > /tmp/file_size1.txt
+find $1 -print0 | xargs -0 stat -f "%N %z" | grep -E "$MEDIA" | grep -o "[a-zA-Z0-9._'-]*$" > /tmp/file_size1.txt
 find $1 -type f -exec md5 {} + | grep -E "$MEDIA" | grep -o '[a-z0-9]*$' > /tmp/disk_check_sums1.txt
 
 paste -d ' ' /tmp/file_list1.txt /tmp/file_size1.txt /tmp/disk_check_sums1.txt > $1/verify.txt
@@ -39,6 +64,6 @@ then
 fi
 
 # remove verify.txt and verify_disk.txt
-
 rm $1/verify.txt $1/verify_disk.txt
+
 
